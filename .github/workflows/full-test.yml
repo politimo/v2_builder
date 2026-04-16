@@ -23,22 +23,15 @@ jobs:
           echo "Skipping pip upgrade on Ubuntu 24.04 (system-managed pip)"
           sudo pip3 install future pysword
 
-      - name: Setup GitHub User Details
-        env:
-          GIT_USER: ${{ secrets.GETBIBLE_GIT_USER }}
-          GIT_EMAIL: ${{ secrets.GETBIBLE_GIT_EMAIL }}
-          GPG_USER: ${{ secrets.GETBIBLE_GPG_USER }}
-          GPG_KEY: ${{ secrets.GETBIBLE_GPG_KEY }}
-          SSH_KEY: ${{ secrets.GETBIBLE_SSH_KEY }}
-          SSH_PUB: ${{ secrets.GETBIBLE_SSH_PUB }}
-        run: |
-          /bin/bash <(/bin/curl -s https://raw.githubusercontent.com/vdm-io/github-user/master/src/setup.sh) \
-            --gpg-key "$GPG_KEY" \
-            --gpg-user "$GPG_USER" \
-            --ssh-key "$SSH_KEY" \
-            --ssh-pub "$SSH_PUB" \
-            --git-user "$GIT_USER" \
-            --git-email "$GIT_EMAIL"
+      - name: Setup gitHub User Details
+        uses: octoleo/git-user@v2
+        with:
+          gpg-key: ${{ secrets.GETBIBLE_GPG_KEY }}
+          gpg-user: ${{ secrets.GETBIBLE_GPG_USER }}
+          ssh-key: ${{ secrets.GETBIBLE_SSH_KEY }}
+          ssh-pub: ${{ secrets.GETBIBLE_SSH_PUB }}
+          git-user: ${{ secrets.GETBIBLE_GIT_USER }}
+          git-email: ${{ secrets.GETBIBLE_GIT_EMAIL }}
 
       - name: Build the JSON Bible files
         env:
